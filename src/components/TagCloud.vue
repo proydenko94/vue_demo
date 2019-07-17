@@ -17,13 +17,8 @@
 
 <script>
 import {getRandomNumber} from '../helpers'
-export default {
-  name: "TagCloud",
-  props: {
-    items: Array
-  },
-  async updated(){
-    let links = this.$el.childNodes;
+function work(){
+   let links = this.$el.childNodes;
     let wrap = this.$el;
     const rect = wrap.getBoundingClientRect(); 
     const bounds = [rect.width,rect.height];
@@ -91,8 +86,8 @@ export default {
         }
         if(ok) {
           allRectangles.push({x1,x2,y1,y2});
-          el.style.left = x1 + "px";
-          el.style.top = y1 + "px";
+          el.style.transform = `translate(${x1}px, ${y1}px)`;
+          // el.style.top = y1 + "px";
           break;
         }
       }
@@ -125,6 +120,23 @@ export default {
       // if(ii<0)
       // break;
     }
+}
+export default {
+  name: "TagCloud",
+  props: {
+    items: Array
+  },
+
+  async updated(){
+   work.call(this);
+   let timeout = null;
+   window.addEventListener("resize", ()=>{
+     let that = this;
+     clearTimeout(timeout);
+     timeout = setTimeout( ()=>{
+       work.call(this)
+      }, 300)
+   });
   }
 };
 </script>
@@ -138,12 +150,15 @@ export default {
   }
   a {
     text-decoration: none;
+    transition: transform .5s ease-in-out;
   }
-  width: 500px;
+  width: 100vw;
+  max-width: 100vw;
+  overflow: hidden;
   // border-radius: 50%;
-  border: 1px solid #000;
+  // border: 1px solid #000;
   margin: 0 auto;
   position: relative;
-  height: 300px;
+  height: 140px;
 }
 </style>

@@ -17,8 +17,15 @@
 
 <script>
 import {getRandomNumber} from '../helpers'
-function work(){
-   let links = this.$el.childNodes;
+
+export default {
+  name: "TagCloud",
+  props: {
+    items: Array
+  },
+  methods: {
+  work(){
+    let links = this.$el.childNodes;
     let wrap = this.$el;
     const rect = wrap.getBoundingClientRect(); 
     const bounds = [rect.width,rect.height];
@@ -57,17 +64,11 @@ function work(){
         )
       );
     }
-    function removeElementsByClass(className){
-      var elements = document.getElementsByClassName(className);
-      while(elements.length > 0){
-          elements[0].parentNode.removeChild(elements[0]);
-      }
-    }
-
     function addEl(el){
       let currentRect = el.getBoundingClientRect();
       let width = currentRect.width,
           height = currentRect.height;
+      
       let ops = 30;
       while(ops>0){
         ops--;
@@ -95,46 +96,21 @@ function work(){
     }
 
     for(let el of links) {
-      
+      el.style.display = 'block';
       el.style.position = 'absolute';
 
       addEl(el);
-
-      // await new Promise((resolve,reject)=>{
-      //   setTimeout(resolve, 200);
-      // })
-      // removeElementsByClass('rec');
-      // for(let q of avaliableAres) {
-        
-      //   let rec = document.createElement('div');
-      //   rec.style.position = 'absolute';
-      //   rec.style.left = q.x1 + 'px';
-      //   rec.style.top = q.y1 + 'px';
-      //   rec.style.width = q.x2 - q.x1 + 'px';
-      //   rec.style.height = (q.y2 - q.y1) + 'px';
-      //   rec.style.border = '1px solid #000';
-      //   rec.className = 'rec';
-      //   wrap.appendChild(rec);
-      // }
-      // ii--;
-      // if(ii<0)
-      // break;
     }
-}
-export default {
-  name: "TagCloud",
-  props: {
-    items: Array
-  },
+  }
+},
 
   async updated(){
-   work.call(this);
+   this.work();
    let timeout = null;
    window.addEventListener("resize", ()=>{
-     let that = this;
      clearTimeout(timeout);
      timeout = setTimeout( ()=>{
-       work.call(this)
+       this.work()
       }, 300)
    });
   }
